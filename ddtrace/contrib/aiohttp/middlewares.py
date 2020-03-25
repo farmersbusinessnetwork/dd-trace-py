@@ -5,6 +5,7 @@ from ..asyncio import context_provider
 from ...ext import AppTypes, http
 from ...compat import stringify
 from ...propagation.http import HTTPPropagator
+from ...context import Context
 
 
 try:
@@ -40,6 +41,8 @@ def trace_middleware_2x(request, handler, app=None):
         # Only need to active the new context if something was propagated
         if context.trace_id:
             tracer.context_provider.activate(context)
+        else:
+            tracer.context_provider.activate(Context())
 
     # trace the handler
     request_span = tracer.trace(
